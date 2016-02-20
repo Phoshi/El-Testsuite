@@ -1,0 +1,561 @@
+#Test prelude_1
+#Description Integer type exists
+#Output 1
+{
+	val x: Integer = 1;
+	print(x);
+}
+
+#Test prelude_2
+#Description String type exists
+#Output foo
+{
+	val x: String = "foo";
+	print(x);
+}
+
+#Test prelude_3
+#Description Boolean type exists
+#Output True
+{
+	val x: Boolean = true;
+	print(x);
+}
+
+#Test if_1
+#Description If executes true branch if true
+#Output True
+if (true)
+	print("True")
+
+#Test if_2
+#Description If does not execute false branch if true
+#Output True
+if (true){
+	print("True");
+} else {
+	print("False");
+}
+
+#Test if_3
+#Description If does execute false branch on false
+#Output False
+if (false){
+	print("True");
+} else {
+	print("False");
+}
+
+#Test for_1
+#Description For iterates through array
+#Output 10
+var sum = 0
+val arr = [1, 2, 3, 4]
+for (i in arr){
+	sum = sum + i;
+}
+print(sum)
+
+#Test for_2
+#Description For does not iterate through empty array
+#Output False
+var flag = false
+for (i in []){
+	flag = true;
+}
+print(flag)
+
+#Test while_1
+#Description While iterates if expression is true
+#Output False
+var flag = true
+while (flag){
+	flag = false;
+}
+print(flag)
+
+#Test while_2
+#Description While does not iterate when expression is false
+#Output False
+var flag = false
+while (false){
+	flag = true;
+}
+print(flag)
+
+#Test while_3
+#Description While iterates while expression is true
+#Output 10
+var sum = 0
+var i = 0
+while (i < 4){
+	i = i + 1;
+	sum = sum + i;
+}
+print(sum)
+
+#Test var_1
+#Description Var makes a new binding
+#Output 5
+var x = 5
+print(x)
+
+#Test var_2
+#Description Var can be rebound
+#Output 10
+var x = 5
+x = 10
+print(x)
+
+#Test val_1
+#Description Val makes a new binding
+#Output 5
+val x = 5
+print(x)
+
+#Test val_2
+#Description Val cannot be rebound
+#Throws Attempted to reassign readonly binding (Name x WRITE) with (Integer 10)
+val x = 5
+x = 10
+print(x)
+
+#Test func_1
+#Description Function definitions work
+def foo(){}
+
+#Test func_2
+#Description Typed function definitions work
+def foo(): Integer {
+	return 1;
+}
+
+#Test func_3
+#Description Functions take arguments
+def foo(x: Integer): Integer{
+	return 1;
+}
+
+#Test funcCall_1
+#Description Functions return something
+#Output 1
+def foo(): Integer{
+	return 1;
+}
+val x = foo()
+print(x)
+
+#Test funcCall_2
+#Description Overloads happen
+#Output 12
+def foo(f: String): Integer{
+	return 1;
+}
+def foo(f: Integer): Integer{
+	return 2;
+}
+print(foo("Hello, World"))
+print(foo(1))
+
+#Test dynamicTypeCast_1
+#Description Dynamic type casts exist
+#Output 5
+val x: Integer? = 5
+print(x)
+
+#Test dynamicTypeCast_2
+#Description Dynamic type casts work
+#Output 5
+def foo(): Integer{
+	return 5;
+}
+val x: Integer<Eq 5>? = foo()
+print(x)
+
+#Test array_1
+#Description Arrays can exist
+#Output 123
+val arr: [Integer] = [1, 2, 3]
+for (i in arr)
+	print(i)
+
+#Test array_2
+#Description Arrays can be indexed
+#Output 2
+val arr: [Integer] = [1, 2, 3]
+var x = arr[1]
+print(x)
+
+#Test array_3
+#Description Arrays can't be indexed out of bounds if length information is present
+#Throws Attempted to index (Constrained (Array (Constrained (Integer) (Or (Or (Eq 1) || (Eq 2)) || (Eq 3)))) (Eq 3)) with (Constrained (Integer) (Eq 5)).
+val arr = [1, 2, 3]
+var x = arr[5]
+
+#Test typeConstraint_1
+#Description Can Eq type constraint
+#Output 5
+val x: Integer<Eq 5> = 5
+print(x)
+
+#Test typeConstraint_2
+#Description Can fail Eq type constraint
+#Throws Attempted to use type (Constrained (Integer) (Eq 4)) where (Constrained (Integer) (Eq 5)) expected.
+val x: Integer<Eq 5> = 4
+
+#Test typeConstraint_3
+#Description Can Gt type constraint
+#Output 6
+val x: Integer<Gt 5> = 6
+print(x)
+
+#Test typeConstraint_4
+#Description Can fail Gt type constraint
+#Throws Attempted to use type (Constrained (Integer) (Eq 4)) where (Constrained (Integer) (Gt 5)) expected.
+val x: Integer<Gt 5> = 4
+
+#Test typeConstraint_5
+#Description Can Lt type constraint
+#Output 4
+val x: Integer<Lt 5> = 4
+print(x)
+
+#Test typeConstraint_6
+#Description Can fail Lt type constraint
+#Throws Attempted to use type (Constrained (Integer) (Eq 6)) where (Constrained (Integer) (Lt 5)) expected.
+val x: Integer<Lt 5> = 6
+
+#Test typeConstraint_7
+#Description Basic value information is traced
+#Output 7
+val x: Integer<Eq 6> = 6
+val y: Integer<Eq 7> = x + 1
+print(y)
+
+#Test typeConstraint_7b
+#Description Basic value information is traced (fail)
+#Throws Attempted to use type (Integer) where (Constrained (Integer) (Eq 7)) expected.
+val x: Integer = 6
+val y: Integer<Eq 7> = x + 1
+print(y)
+
+#Test typeConstraint_8
+#Description Range types
+#Output 7
+val x: Integer<Gt 5 Lt 10> = 7
+print(x)
+
+#Test typeConstraint_8b
+#Description Range types (fail)
+#Throws Attempted to use type (Constrained (Integer) (Eq 17)) where (Constrained (Integer) (And (Gt 5) && (Lt 10))) expected.
+val x: Integer<Gt 5 Lt 10> = 17
+
+#Test typeConstraint_9
+#Description Set types
+#Output 5
+val x: Integer<Eq 1 | Eq 3 | Eq 5> = 5
+print(x)
+
+#Test typeConstraint_9b
+#Description Set types (fail)
+#Throws Attempted to use type (Constrained (Integer) (Eq 4)) where (Constrained (Integer) (Or (Or (Eq 1) || (Eq 3)) || (Eq 5))) expected.
+val x: Integer<Eq 1 | Eq 3 | Eq 5> = 4
+print(x)
+
+#Test typeConstraint_10
+#Description Mod types
+#Output 10
+val x: Integer<Mod 5> = 10
+print(x)
+
+#Test typeConstraint_10b
+#Description Mod types (fail)
+#Throws Attempted to use type (Constrained (Integer) (Eq 13)) where (Constrained (Integer) (Mod 5)) expected.
+val x: Integer<Mod 5> = 13
+
+#Test flagType_1
+#Description Flag types exist
+#Output 5
+var x: Integer#Safe = 5
+print(x)
+
+#Test flagType_2
+#Description Flag types allow assigning to the same flag
+#Output 5
+var x: Integer#Safe = 5
+var y: Integer#Safe = x
+print(y)
+
+#Test flagType_3
+#Description Flag don't allow assigning to different flags
+#Throws Attempted to use type (Constrained (Integer) (Flag #Safe)) where (Integer) expected.
+var x: Integer#Safe = 5
+var y: Integer = x
+
+#Test flagType_4
+#Description Flag types can be reassigned through runtime trickery
+#Output 5
+def sanitise(unsafe: Integer): Integer?#Safe{
+	return unsafe;
+}
+var x: Integer#Safe = 5
+var y: Integer = sanitise(x)
+print(y)
+
+#Test userType_1
+#Description User can define type
+#Output 1 5
+record Foo = (fooX: Integer, fooY: Integer)
+{
+	val foo = Foo(1, 5);
+	val x = fooX(foo);
+	val y = fooY(foo);
+	print(x);
+	print(" ");
+	print(y);
+}
+
+#Test typeParameter_1
+#Description User defined types can have type parameters
+#Output 1
+record Foo T = (fooX: T)
+val foo: Foo Integer = Foo(1)
+val x = fooX(foo)
+print(x)
+
+#Test typeParameter_2
+#Description Type parameters inform function resolution
+#Output 21
+record Foo T = (fooX: T)
+def fooble(x: Foo Integer){
+	print(1);
+}
+def fooble(x: Foo String){
+	print(2);
+}
+fooble(Foo("Hi"))
+fooble(Foo(0))
+
+#Test typeParameter_3
+#Description Can have many type parameters
+#Output 4
+record Point T K = (fooX: T, fooY: K)
+var p = Point(2, 2)
+print(fooX(p) + fooY(p))
+
+#Test typeParameter_4
+#Description Can have different parameters
+#Output 2Hello, world!
+record Tuple2 T K = (Item1: T, Item2: K)
+def print(t2: Tuple2 Integer, String){
+	print(Item1(t2));
+	print(Item2(t2));
+}
+val myTuple: Tuple2 Integer, String = Tuple2(2, "Hello, world!")
+print(myTuple)
+
+#Test typeClass_1
+#Description Typeclasses can exist
+#Output 1hi
+typeclass Showable T = {show(instance: T): String};
+instance Showable Integer = {
+	def show(instance: Integer): String {
+		return "Integer";
+	}
+}
+instance Showable String = {
+	def show(instance: String): String){
+		return "String";
+	}
+}
+val int = show(1)
+val str = show("hi")
+print(int)
+print(str)
+
+#Test destructuringAssignment_1
+#Description Support destructuring assignment of arrays
+#Output 1234
+val arr = [1, 2, [3, 4]]
+val [a, b, [c, d]] = arr
+print(a)
+print(b)
+print(c)
+print(d)
+
+#Test blockSyntax_1
+#Description Block syntax exists
+#Output 55
+var x = 0
+var y = 0
+{	
+	y = 5;
+	x = y;
+	print(x);
+	print(y);
+}
+
+#Test blockSyntax_2
+#Description Block syntax makes scopes
+#Output 5505
+var x = 0
+val y = 0
+{	
+	val y = 5;
+	x = y;
+	print(x);
+	print(y);
+}
+print(y)
+print(x)
+
+#Test anonymousFunction_1
+#Description Anonymous function syntax exists
+val func: (Integer, Integer): Integer = (a, b) => a + b;
+
+#Test anonymousFunction_2
+#Description Anonymous functions work
+#Equals sum 3
+val func: (Integer, Integer): Integer = (a, b) => a + b;
+val sum = func(1, 2);
+
+#Test patternMatch_1
+#Description Pattern matching syntax exists
+val x = 5 match {
+	5 => true;
+	otherwise => false;
+}
+
+#Test patternMatch_1
+#Description Pattern matching syntax works at least a bit
+#Equals x 5
+val x = 5 match {
+	5 => true;
+	otherwise => false;
+}
+
+#Test module_1
+#Description Module definition syntax exists
+module Kittens {
+	val name = "Annabelle";
+}
+
+#Test moduleDereference_1
+#Description Module dereference syntax exists
+#Equals n "Annabelle"
+module Kittens {
+	val name = "Annabelle";
+}
+val n = Kittens::name;
+
+#Test operator_plus_1
+#Description Addition works
+#Output 10
+val sum = 6 + 4
+print(sum)
+
+#Test operator_minus_1
+#Description Suntraction works
+#Output 2
+val sum = 6 - 4
+print(sum)
+
+#Test operator_division_1
+#Description Division works
+#Output 3
+val sum = 6 / 2
+print(sum)
+
+#Test operator_multiplication_1
+#Description multiplication works
+#Output 10
+val sum = 5 * 2
+print(sum)
+
+#Test operator_modulo_1
+#Description multiplication works
+#Output 5
+val sum = 15 % 10
+print(sum)
+
+#Test operator_equality_1
+#Description equality works
+#Output TrueFalse
+val t = 2 == 2
+val f = 2 == 3
+print(t)
+print(f)
+
+#Test operator_inequality_1
+#Description inequality works
+#Output TrueFalse
+val t = 2 != 3
+val f = 2 != 2
+print(t)
+print(f)
+
+#Test operator_gt_1
+#Description Greater than works
+#Output TrueFalse
+val t = 4 > 3
+val f = 2 < 1
+print(t)
+print(f)
+
+#Test operator_lt_1
+#Description Less than works
+#Output TrueFalse
+val f = 3 > 4
+val t = 2 > 1
+print(t)
+print(f)
+
+#Test operator_gte_1
+#Description Greater than or equal works
+#Output TrueTrueFalse
+val t = 4 >= 3
+val t2 = 4 >= 4
+val f = 1 >= 2
+print(t)
+print(t2)
+print(f)
+
+#Test operator_lte_1
+#Description Less than or equal works
+#Output TrueTrueFalse
+val f = 4 <= 3
+val t = 1 <= 2
+val t2 = 1 <= 1
+print(t)
+print(t2)
+print(f)
+
+#Test operator_negate_1
+#Description Negation operator negates
+#Output TrueFalse
+val t = !false
+val f = !true
+print(t)
+print(f)
+
+#Test operator_invert_1
+#Description Invert operator inverts
+#Output -5
+var x = -5
+print(x)
+
+#Test operator_and_1
+#Description Logical and
+#Output TrueFalse
+val t = true && true
+val f = true && false
+print(t)
+print(f)
+
+#Test operator_or_1
+#Description Logical or
+#Output TrueFalse
+val t = true || false
+val f = false || false
+print(t)
+print(f)

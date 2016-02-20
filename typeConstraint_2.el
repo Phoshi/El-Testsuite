@@ -1,0 +1,1 @@
+val x: Integer<Eq 5> = 4

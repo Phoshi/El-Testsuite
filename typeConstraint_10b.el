@@ -1,0 +1,1 @@
+val x: Integer<Mod 5> = 13

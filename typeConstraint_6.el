@@ -1,0 +1,1 @@
+val x: Integer<Lt 5> = 6

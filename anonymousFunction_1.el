@@ -1,0 +1,1 @@
+val func: (Integer, Integer): Integer = (a, b) => a + b;
